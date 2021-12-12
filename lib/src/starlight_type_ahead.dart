@@ -8,7 +8,7 @@ class StarlightTypeAhead<T, R> extends StatefulWidget {
   final T _data;
   final List<String>? _targets;
   final Widget Function(R) _itemBuilder;
-  final void Function(R)? _onSelect;
+  final void Function(R, _StarlightAheadService)? _onSelect;
   final BoxDecoration? _decoration;
   final EdgeInsets? _padding;
   final TextEditingController _controller;
@@ -73,7 +73,7 @@ class StarlightTypeAhead<T, R> extends StatefulWidget {
     required double itemWidth,
     required double itemHeight,
     required Widget Function(R) itemBuilder,
-    void Function(R)? onSelect,
+    void Function(R, _StarlightAheadService)? onSelect,
     ScrollPhysics? itemScrollPhysics,
     ScrollController? itemScrollController,
     BoxDecoration? decoration,
@@ -210,7 +210,7 @@ class _StarlightTypeAheadState extends State<StarlightTypeAhead>
 
   @override
   void dispose() {
-    _aheadService.dispose();
+    _aheadService._dispose();
     super.dispose();
   }
 
@@ -267,7 +267,7 @@ class _StarlightTypeAheadState extends State<StarlightTypeAhead>
           scrollPhysics: widget._inputScrollPhysics,
           scrollController: widget._inputScrollController,
           enableIMEPersonalizedLearning: widget._enableIMEPersonalizedLearning,
-          onChanged: _aheadService.onSearch,
+          onChanged: _aheadService._onSearch,
           decoration: widget._inputDecoration,
         ),
         StreamBuilder<_StarlightAheadModel>(
@@ -305,10 +305,10 @@ class _StarlightTypeAheadState extends State<StarlightTypeAhead>
                               data.data!._data[i].toString();
                         }
                       }
-                      _aheadService.onSearch('');
+                      _aheadService._onSearch('');
                       return;
                     }
-                    widget._onSelect!(data.data!._data[i]);
+                    widget._onSelect!(data.data!._data[i], _aheadService);
                   },
                   child: widget._itemBuilder(data.data!._data[i]),
                 ),

@@ -1,6 +1,6 @@
 name: starlight_type_ahead
-description: A new Flutter package project.
-version: 0.0.1
+description: A TypeAhead (autocomplete) widget for Flutter, where you can show suggestions to users as they type
+version: 0.0.2
 homepage:
 
 environment:

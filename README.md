@@ -106,8 +106,11 @@ class SearchProduct extends StatelessWidget {
       ),
       child: StarlightTypeAhead(
         controller: TextEditingController(),
-        onSelect: (e) {
-          print((e as ProductModel).barcode);
+       onSelect: (select, service) {
+          select as ProductModel;
+          print(select.name);
+          ///if you want to close Suggestion
+          //service.closeSuggestion();
         },
         data:
 

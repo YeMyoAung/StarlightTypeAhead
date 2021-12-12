@@ -26,6 +26,7 @@ class _StarlightAheadService<T, R> {
         message: 'List is required.',
       );
     }
+    if ((_data as List).isEmpty) return;
     if (_data is List<String>) return;
     if (_data is List<int>) return;
     if (_data is List<double>) return;
@@ -76,7 +77,14 @@ class _StarlightAheadService<T, R> {
 
   late final Sink<_StarlightAheadModel> _aheadSink = _aheadController.sink;
 
-  void onSearch(String searchData) {
+  void closeSuggestion() => _aheadSink.add(
+        const _StarlightAheadModel(
+          isSearch: false,
+          data: [],
+        ),
+      );
+
+  void _onSearch(String searchData) {
     if (searchData.isEmpty) {
       _aheadSink.add(
         const _StarlightAheadModel(
@@ -86,6 +94,7 @@ class _StarlightAheadService<T, R> {
       );
       return;
     }
+    if ((_data as List).isEmpty) return;
 
     final T _result = (_data as List).where((parse) {
       List<bool> _isMatch = [];
@@ -117,7 +126,7 @@ class _StarlightAheadService<T, R> {
     );
   }
 
-  void dispose() {
+  void _dispose() {
     _aheadController.close();
     _aheadSink.close();
   }
