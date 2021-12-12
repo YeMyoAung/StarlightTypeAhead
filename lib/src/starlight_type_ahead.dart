@@ -320,7 +320,8 @@ class _StarlightTypeAheadState extends State<StarlightTypeAhead>
                 ),
               ),
             ),
-            crossFadeState: data.data?._isSearch == false
+            crossFadeState: data.data?._isSearch == false ||
+                    (data.data!._data as List).isEmpty
                 ? CrossFadeState.showFirst
                 : CrossFadeState.showSecond,
             duration: const Duration(milliseconds: 200),
