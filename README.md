@@ -29,7 +29,7 @@ A TypeAhead (autocomplete) widget for Flutter, where you can show suggestions to
 
 ## Installation
 
-Add starlight_notification as dependency to your pubspec file.
+Add starlight_type_ahead as dependency to your pubspec file.
 
 ```dart
 starlight_type_ahead: 
