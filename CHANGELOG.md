@@ -4,5 +4,7 @@
 
 ## 0.0.2
 
+* container width
+* container heidht
 * empty list
 * close suggestion function

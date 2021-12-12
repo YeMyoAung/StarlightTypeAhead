@@ -106,7 +106,16 @@ class SearchProduct extends StatelessWidget {
       ),
       child: StarlightTypeAhead(
         controller: TextEditingController(),
-       onSelect: (select, service) {
+        width: double.infinity,
+        height: 300,
+        itemHeight: 60,
+        itemScrollController: ScrollController(
+          debugLabel: 'item',
+        ),
+        scrollController: ScrollController(
+          debugLabel: 'input',
+        ),
+        onSelect: (select, service) {
           select as ProductModel;
           print(select.name);
           ///if you want to close Suggestion
@@ -217,8 +226,6 @@ class SearchProduct extends StatelessWidget {
           'name',
           'barcode',
         ],
-        itemWidth: double.infinity,
-        itemHeight: 60,
         itemBuilder: (e) {
           ///For Object
           e as ProductModel;

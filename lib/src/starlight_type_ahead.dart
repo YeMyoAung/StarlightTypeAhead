@@ -1,7 +1,8 @@
 part of starlight_type_ahead;
 
 class StarlightTypeAhead<T, R> extends StatefulWidget {
-  final double _itemWidth;
+  final double _width;
+  final double _height;
   final double _itemHeight;
   final ScrollPhysics? _itemScrollPhysics;
   final ScrollController? _itemScrollController;
@@ -70,7 +71,8 @@ class StarlightTypeAhead<T, R> extends StatefulWidget {
     required TextEditingController controller,
     required T data,
     List<String>? targets,
-    required double itemWidth,
+    required double width,
+    required double height,
     required double itemHeight,
     required Widget Function(R) itemBuilder,
     void Function(R, _StarlightAheadService)? onSelect,
@@ -131,7 +133,8 @@ class StarlightTypeAhead<T, R> extends StatefulWidget {
     ScrollController? scrollController,
     String? restorationId,
     bool enableIMEPersonalizedLearning = true,
-  })  : _itemWidth = itemWidth,
+  })  : _width = width,
+        _height = height,
         _itemHeight = itemHeight,
         _data = data,
         _targets = targets,
@@ -279,38 +282,41 @@ class _StarlightTypeAheadState extends State<StarlightTypeAhead>
           builder: (_, data) => AnimatedCrossFade(
             firstChild: const SizedBox(),
             secondChild: Container(
-              width: widget._itemWidth,
-              height: widget._itemHeight * (data.data?._data as List).length,
+              width: widget._width,
+              height: widget._height,
               margin: const EdgeInsets.only(top: 5),
               padding: widget._padding,
               decoration: widget._decoration,
-              child: ListView.builder(
-                physics: widget._itemScrollPhysics,
-                controller: widget._itemScrollController,
-                itemExtent: widget._itemHeight,
-                itemCount: (data.data!._data as List).length,
-                itemBuilder: (_, i) => InkWell(
-                  onTap: () {
-                    if (widget._onSelect == null) {
-                      try {
-                        widget._controller.text =
-                            data.data!._data[i].toJson()[widget._targets?[0]];
-                      } catch (_) {
-                        if (data.data!._data[i] is Map) {
-                          widget._controller.text = data
-                              .data!._data[i][widget._targets?[0]]
-                              .toString();
-                        } else {
+              child: NotificationListener(
+                onNotification: context.overScroll,
+                child: ListView.builder(
+                  physics: widget._itemScrollPhysics,
+                  controller: widget._itemScrollController,
+                  itemExtent: widget._itemHeight,
+                  itemCount: (data.data!._data as List).length,
+                  itemBuilder: (_, i) => InkWell(
+                    onTap: () {
+                      if (widget._onSelect == null) {
+                        try {
                           widget._controller.text =
-                              data.data!._data[i].toString();
+                              data.data!._data[i].toJson()[widget._targets?[0]];
+                        } catch (_) {
+                          if (data.data!._data[i] is Map) {
+                            widget._controller.text = data
+                                .data!._data[i][widget._targets?[0]]
+                                .toString();
+                          } else {
+                            widget._controller.text =
+                                data.data!._data[i].toString();
+                          }
                         }
+                        _aheadService._onSearch('');
+                        return;
                       }
-                      _aheadService._onSearch('');
-                      return;
-                    }
-                    widget._onSelect!(data.data!._data[i], _aheadService);
-                  },
-                  child: widget._itemBuilder(data.data!._data[i]),
+                      widget._onSelect!(data.data!._data[i], _aheadService);
+                    },
+                    child: widget._itemBuilder(data.data!._data[i]),
+                  ),
                 ),
               ),
             ),
