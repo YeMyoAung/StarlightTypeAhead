@@ -23,7 +23,9 @@ A TypeAhead (autocomplete) widget for Flutter, where you can show suggestions to
 ☑️ Autocomplete TextField <br>
 ☑️ Autocomplete TextFormField <br>
 
-[Watch Tutorial](https://www.facebook.com/starlightstudio.of/)
+![Watch the video](https://user-images.githubusercontent.com/26484667/145707645-40f0ae5e-6e5f-40b1-9091-6b98af4f4a62.mp4)
+
+[Watch Tutorial](https://fb.watch/9RxCw08gsw/)
 
 ## Installation
 
