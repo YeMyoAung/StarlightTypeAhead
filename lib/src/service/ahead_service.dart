@@ -85,6 +85,12 @@ class _StarlightAheadService<T, R> {
   void closeSuggestion({
     T? complete,
   }) {
+    _aheadSink.add(
+      const _StarlightAheadModel(
+        isSearch: false,
+        data: [],
+      ),
+    );
     if (complete != null) {
       try {
         _controller.text =
@@ -96,8 +102,9 @@ class _StarlightAheadService<T, R> {
           _controller.text = complete.toString();
         }
       }
-      // _controller.text = _searchData;
     }
+
+    _onSearch('');
     _aheadSink.add(
       const _StarlightAheadModel(
         isSearch: false,
@@ -117,35 +124,61 @@ class _StarlightAheadService<T, R> {
       return;
     }
     if ((_data as List).isEmpty) return;
-
-    final T _result = (_data as List).where((parse) {
-      List<bool> _isMatch = [];
+    try {
       if (_targets.isEmpty) {
-        _isMatch.add(
-          parse.toString().validate(searchData),
+        (_data as List).firstWhere(
+          (data) => data.toString() == searchData,
         );
-        return _isMatch.contains(true);
+        _aheadSink.add(
+          const _StarlightAheadModel(
+            isSearch: false,
+            data: [],
+          ),
+        );
+
+        return;
       }
       for (var target in _targets) {
         try {
-          _isMatch.add(
-            parse.toJson()[target].toString().validate(searchData),
+          (_data as List).firstWhere(
+            (parse) => parse.toJson()[target].toString() == searchData,
           );
         } catch (e) {
-          _isMatch.add(
-            parse[target].toString().validate(searchData),
+          (_data as List).firstWhere(
+            (parse) => parse[target].toString().validate(searchData),
           );
         }
       }
-      return _isMatch.contains(true);
-    }).toList() as T;
+    } catch (e) {
+      final T _result = (_data as List).where((parse) {
+        List<bool> _isMatch = [];
+        if (_targets.isEmpty) {
+          _isMatch.add(
+            parse.toString().validate(searchData),
+          );
+          return _isMatch.contains(true);
+        }
+        for (var target in _targets) {
+          try {
+            _isMatch.add(
+              parse.toJson()[target].toString().validate(searchData),
+            );
+          } catch (e) {
+            _isMatch.add(
+              parse[target].toString().validate(searchData),
+            );
+          }
+        }
+        return _isMatch.contains(true);
+      }).toList() as T;
 
-    _aheadSink.add(
-      _StarlightAheadModel(
-        isSearch: true,
-        data: _result,
-      ),
-    );
+      _aheadSink.add(
+        _StarlightAheadModel(
+          isSearch: true,
+          data: _result,
+        ),
+      );
+    }
   }
 
   void _dispose() {
