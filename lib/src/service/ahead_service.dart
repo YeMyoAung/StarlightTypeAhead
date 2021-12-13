@@ -103,7 +103,6 @@ class _StarlightAheadService<T, R> {
         }
       }
     }
-
     _onSearch('');
     _aheadSink.add(
       const _StarlightAheadModel(

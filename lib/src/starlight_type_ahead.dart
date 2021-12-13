@@ -9,7 +9,7 @@ class StarlightTypeAhead<T, R> extends StatefulWidget {
   final T _data;
   final List<String>? _targets;
   final Widget Function(R) _itemBuilder;
-  final void Function(R, _StarlightAheadService)? _onSelect;
+  final void Function(R, StarlightService)? _onSelect;
   final BoxDecoration? _decoration;
   final EdgeInsets? _padding;
   final TextEditingController _controller;
@@ -75,7 +75,7 @@ class StarlightTypeAhead<T, R> extends StatefulWidget {
     required double height,
     required double itemHeight,
     required Widget Function(R) itemBuilder,
-    void Function(R, _StarlightAheadService)? onSelect,
+    void Function(R, StarlightService)? onSelect,
     ScrollPhysics? itemScrollPhysics,
     ScrollController? itemScrollController,
     BoxDecoration? decoration,
@@ -200,15 +200,17 @@ class StarlightTypeAhead<T, R> extends StatefulWidget {
 
 class _StarlightTypeAheadState extends State<StarlightTypeAhead>
     with AutomaticKeepAliveClientMixin {
-  late _StarlightAheadService _aheadService;
+  late StarlightService _aheadService;
 
   @override
   void initState() {
     super.initState();
-    _aheadService = _StarlightAheadService.instance(
-      data: widget._data,
-      targets: widget._targets ?? [],
-      controller: widget._controller,
+    _aheadService = StarlightService.instance(
+      _StarlightAheadService.instance(
+        data: widget._data,
+        targets: widget._targets ?? [],
+        controller: widget._controller,
+      ),
     );
   }
 
@@ -259,7 +261,10 @@ class _StarlightTypeAheadState extends State<StarlightTypeAhead>
           minLines: widget._minLines,
           expands: widget._expands,
           onTap: widget._onTap,
-          onFieldSubmitted: widget._onFieldSubmitted,
+          onFieldSubmitted: (s) {
+            _aheadService.closeSuggestion();
+            if (widget._onFieldSubmitted != null) widget._onFieldSubmitted!(s);
+          },
           onSaved: widget._onSaved,
           validator: widget._validator,
           inputFormatters: widget._inputFormatters,
