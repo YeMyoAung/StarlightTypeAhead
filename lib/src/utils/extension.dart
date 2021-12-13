@@ -8,7 +8,7 @@ extension _StarlightTypeAheadString on String {
 
 extension _StarlightTypeAheadBuildContext on BuildContext {
   bool overScroll(OverscrollIndicatorNotification e) {
-    e.disallowGlow();
+    e.disallowIndicator();
     return false;
   }
 }

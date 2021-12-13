@@ -7,6 +7,9 @@ class _StarlightAheadService<T, R> {
   ///Target for User Search
   final List<String> _targets;
 
+  //controller [TextEditingController]
+  final TextEditingController _controller;
+
   ///Store User Parsed Data
   // final List<Map> _parsedData = [];
 
@@ -14,8 +17,10 @@ class _StarlightAheadService<T, R> {
   _StarlightAheadService._({
     required T data,
     required List<String> targets,
+    required TextEditingController controller,
   })  : _data = data,
-        _targets = targets {
+        _targets = targets,
+        _controller = controller {
     _init();
   }
 
@@ -77,12 +82,29 @@ class _StarlightAheadService<T, R> {
 
   late final Sink<_StarlightAheadModel> _aheadSink = _aheadController.sink;
 
-  void closeSuggestion() => _aheadSink.add(
-        const _StarlightAheadModel(
-          isSearch: false,
-          data: [],
-        ),
-      );
+  void closeSuggestion({
+    T? complete,
+  }) {
+    if (complete != null) {
+      try {
+        _controller.text =
+            (complete as dynamic).toJson()[_targets[0]].toString();
+      } catch (e) {
+        if (complete is Map) {
+          _controller.text = complete[_targets[0]].toString();
+        } else {
+          _controller.text = complete.toString();
+        }
+      }
+      // _controller.text = _searchData;
+    }
+    _aheadSink.add(
+      const _StarlightAheadModel(
+        isSearch: false,
+        data: [],
+      ),
+    );
+  }
 
   void _onSearch(String searchData) {
     if (searchData.isEmpty) {
@@ -134,9 +156,11 @@ class _StarlightAheadService<T, R> {
   factory _StarlightAheadService.instance({
     required T data,
     required List<String> targets,
+    required TextEditingController controller,
   }) =>
       _StarlightAheadService<T, R>._(
         data: data,
         targets: targets,
+        controller: controller,
       );
 }

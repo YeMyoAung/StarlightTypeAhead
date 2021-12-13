@@ -208,6 +208,7 @@ class _StarlightTypeAheadState extends State<StarlightTypeAhead>
     _aheadService = _StarlightAheadService.instance(
       data: widget._data,
       targets: widget._targets ?? [],
+      controller: widget._controller,
     );
   }
 

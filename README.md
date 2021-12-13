@@ -118,8 +118,12 @@ class SearchProduct extends StatelessWidget {
         onSelect: (select, service) {
           select as ProductModel;
           print(select.name);
-          ///if you want to close Suggestion
+          ///if you want to close only Suggestion
           //service.closeSuggestion();
+          ///if you want to close Suggestion and filled data
+          //service.closeSuggestion(
+          //   complete: select,
+          //);
         },
         data:
 
